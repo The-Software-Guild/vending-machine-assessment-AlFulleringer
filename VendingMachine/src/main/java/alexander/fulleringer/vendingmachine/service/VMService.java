@@ -5,6 +5,7 @@
  */
 package alexander.fulleringer.vendingmachine.service;
 
+import alexander.fulleringer.vendingmachine.dto.Change;
 import alexander.fulleringer.vendingmachine.dto.Change.Coin;
 import alexander.fulleringer.vendingmachine.exceptions.AuditorFileAccessException;
 import alexander.fulleringer.vendingmachine.exceptions.DaoFileAccessException;
@@ -28,6 +29,7 @@ public interface VMService {
     void addFunds(Coin myCoin) throws AuditorFileAccessException;
     void loadInventory() throws DaoFileAccessException;
     void writeInventory() throws DaoFileAccessException;
-    
+    BigDecimal getFunds();
+    String returnChange() throws AuditorFileAccessException;
     
 }

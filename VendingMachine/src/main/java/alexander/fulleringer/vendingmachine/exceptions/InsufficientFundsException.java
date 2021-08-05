@@ -10,5 +10,10 @@ package alexander.fulleringer.vendingmachine.exceptions;
  * @author Alex
  */
 public class InsufficientFundsException extends Exception {
-    
+    public InsufficientFundsException(String message){
+        super(message);
+    }
+    public InsufficientFundsException(String message, Throwable cause){
+        super(message,cause);
+    }
 }

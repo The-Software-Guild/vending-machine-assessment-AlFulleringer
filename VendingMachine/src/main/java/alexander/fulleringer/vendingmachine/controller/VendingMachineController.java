@@ -37,27 +37,25 @@ public class VendingMachineController {
     
     public void run(){
         boolean loop = true;
-        int choice; 
+        int choice;
         while (loop){
             choice = view.printMenuGetSelection();
-        
+            
             switch (choice) {
                 case 1:
                     addFunds();
                     break;
                 case 2:
-                    view.displayUnkownCommandBanner();
-                    //purchaseItem();
+                    
+                    purchaseItem();
                     break;
                 case 3:
-                                        view.displayUnkownCommandBanner();
-
-                    //returnChange();
+                    
+                    returnChange();
                     break;
                 case 4:
-                                        view.displayUnkownCommandBanner();
-
-                    //getItemInventory();
+                    
+                    getItemInventory();
                     break;
                 case 5:
                     loop = false;
@@ -76,29 +74,29 @@ public class VendingMachineController {
         while (loop){
             choice = view.displayAddFundsMenuGetSelection();
             try{
-            switch (choice){
-                case 1:
-                    myCoin = Coin.PENNY;
-                    service.addFunds(myCoin);
-                    break;
-                case 2:
-                    myCoin = Coin.DIME;
-                    service.addFunds(myCoin);
-                    break;
-                case 3:
-                    myCoin = Coin.NICKEL;
-                    service.addFunds(myCoin);
-                    break;
-                case 4:
-                    myCoin = Coin.QUARTER;
-                    service.addFunds(myCoin);
-                    break;
-                case 5:
-                    loop = false;
-                    break;
-                default:
-                    break;
-            }
+                switch (choice){
+                    case 1:
+                        myCoin = Coin.PENNY;
+                        service.addFunds(myCoin);
+                        break;
+                    case 2:
+                        myCoin = Coin.DIME;
+                        service.addFunds(myCoin);
+                        break;
+                    case 3:
+                        myCoin = Coin.NICKEL;
+                        service.addFunds(myCoin);
+                        break;
+                    case 4:
+                        myCoin = Coin.QUARTER;
+                        service.addFunds(myCoin);
+                        break;
+                    case 5:
+                        loop = false;
+                        break;
+                    default:
+                        break;
+                }
             }
             catch(AuditorFileAccessException e){
                 view.displayError(e);
@@ -113,7 +111,14 @@ public class VendingMachineController {
     }
     
     private void returnChange() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String changeDescription;
+        try{
+            changeDescription = service.returnChange();
+            view.printChange(changeDescription);
+        }
+        catch(AuditorFileAccessException e){
+            view.printErrorMessage(e);
+        }
     }
     
     private void getItemInventory() {

@@ -143,6 +143,11 @@ public class VMView {
         System.out.println(e.getMessage());
               
     }
+
+    public void printChange(String changeDescription) {
+        System.out.println("Here is your change!");
+        System.out.println(changeDescription);
+    }
     
     
 }

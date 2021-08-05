@@ -9,7 +9,9 @@ import alexander.fulleringer.vendingmachine.dao.VMDao;
 import alexander.fulleringer.vendingmachine.dao.VMDaoAuditor;
 import alexander.fulleringer.vendingmachine.dao.VMDaoAuditorFileImpl;
 import alexander.fulleringer.vendingmachine.dao.VMDaoFileImpl;
+import alexander.fulleringer.vendingmachine.dto.Change;
 import alexander.fulleringer.vendingmachine.dto.Change.Coin;
+import alexander.fulleringer.vendingmachine.dto.Item;
 import alexander.fulleringer.vendingmachine.exceptions.AuditorFileAccessException;
 import alexander.fulleringer.vendingmachine.exceptions.DaoFileAccessException;
 import alexander.fulleringer.vendingmachine.exceptions.InsufficientFundsException;
@@ -41,25 +43,44 @@ public class VMServiceImpl implements VMService {
     
     @Override
     public void purchaseItem(String itemId) throws InsufficientFundsException, NoInventoryException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Item toPurchase = dao.getItem(itemId);
+        if(toPurchase.getStock()>0){
+            if(toPurchase.getCost().compareTo(dao.getFunds()) != 1){ // 1 means cost is greater than price
+                dao.decrementItemCount(itemId);
+                dao.setFunds(dao.getFunds().subtract(toPurchase.getCost()));
+            }
+            else{
+                throw new InsufficientFundsException("You don't have the money to purchase that!");
+            }
+        }
+        else{
+            throw new NoInventoryException("There are no "+ itemId + " remaining.");
+        }
+        
     }
     
     @Override
     public void addFunds(Coin myCoin) throws AuditorFileAccessException{
         this.dao.setFunds(dao.getFunds().add(myCoin.getValue()));
-
         this.auditor.writeEntry("Added funds: " + myCoin.toString() + "New total: " + this.dao.getFunds() );
-       
+        
     }
     
     @Override
     public void loadInventory() throws DaoFileAccessException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        dao.writeFile();    }
     
     @Override
     public void writeInventory() throws DaoFileAccessException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        dao.readFile();
+    }
+
+    @Override
+    public String returnChange() throws AuditorFileAccessException{
+        Change theChange = new Change(this.getFunds());
+        auditor.writeEntry("Change returned: " + theChange);
+        dao.setFunds(new BigDecimal("0.00"));
+        return theChange.getChange();
     }
     
 }
