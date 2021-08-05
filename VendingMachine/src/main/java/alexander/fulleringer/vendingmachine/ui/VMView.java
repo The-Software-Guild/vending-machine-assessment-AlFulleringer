@@ -8,6 +8,7 @@ package alexander.fulleringer.vendingmachine.ui;
 import alexander.fulleringer.vendingmachine.dto.Change.Coin;
 import alexander.fulleringer.vendingmachine.dto.Item;
 import alexander.fulleringer.vendingmachine.exceptions.AuditorFileAccessException;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -62,7 +63,7 @@ public class VMView {
 
 //
     public void displayInventory(List<Item> inventory){
-        io.print("Here is what we have in our Vending Machine!");
+        io.print("\nHere is what we have in our Vending Machine!");
         for(Item item : inventory){
             displayItem(item);
         }
@@ -132,8 +133,8 @@ public class VMView {
         System.out.println("Your options are as follows:");
         
         System.out.println("1. Penny");
-        System.out.println("2. Dime");
-        System.out.println("3. Nickel");
+        System.out.println("2. Nickel");
+        System.out.println("3. Dime");
         System.out.println("4. Quarter");
         System.out.println("5. Exit without inserting a coin");
     }
@@ -158,8 +159,16 @@ public class VMView {
             option++;
         }
         int choice = io.readInt("Which # would you like?", 1, inventory.size());
+        
         return inventory.get(choice-1).getName();
     }
     
+    public void displayFunds(BigDecimal funds){
+        io.print("Funds available: " + funds.toString());
+    }
+
+    public void printPurchaseSuccess(String itemId, BigDecimal funds) {
+        io.print("You have successfully purchased a " + itemId + ". You have " + funds.toString() +"$ remaining.");
+    }
     
 }

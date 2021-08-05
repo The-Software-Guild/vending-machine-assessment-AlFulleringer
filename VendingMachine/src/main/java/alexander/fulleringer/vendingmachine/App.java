@@ -6,6 +6,17 @@
 package alexander.fulleringer.vendingmachine;
 
 import alexander.fulleringer.vendingmachine.controller.VendingMachineController;
+import alexander.fulleringer.vendingmachine.dao.VMDao;
+import alexander.fulleringer.vendingmachine.dao.VMDaoAuditor;
+import alexander.fulleringer.vendingmachine.dao.VMDaoAuditorFileImpl;
+import alexander.fulleringer.vendingmachine.dao.VMDaoFileImpl;
+import alexander.fulleringer.vendingmachine.exceptions.AuditorFileAccessException;
+import alexander.fulleringer.vendingmachine.exceptions.DaoFileAccessException;
+import alexander.fulleringer.vendingmachine.service.VMService;
+import alexander.fulleringer.vendingmachine.service.VMServiceImpl;
+import alexander.fulleringer.vendingmachine.ui.UserIO;
+import alexander.fulleringer.vendingmachine.ui.UserIOConsoleImpl;
+import alexander.fulleringer.vendingmachine.ui.VMView;
 
 
 
@@ -15,10 +26,26 @@ import alexander.fulleringer.vendingmachine.controller.VendingMachineController;
  */
 public class App {
     public static void main(String[] args){
+        VMDao dao;
+        VMDaoAuditor auditor;
+        VMService service; 
+        UserIO io = new UserIOConsoleImpl();
+        VMView view = new VMView(io);
         
-        VendingMachineController controller = new VendingMachineController();
+        try{
+            dao = new VMDaoFileImpl();
+            auditor = new VMDaoAuditorFileImpl();
+            service = new VMServiceImpl(dao,auditor);
+            VendingMachineController controller = new VendingMachineController(service, view);
+            controller.run();
+        }
+        catch(DaoFileAccessException e){
+            view.printErrorMessage(e);
+            System.exit(0);
+        }
         
-        controller.run();
+        
+        
         
     }
 }

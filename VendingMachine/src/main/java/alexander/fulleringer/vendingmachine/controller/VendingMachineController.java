@@ -10,6 +10,7 @@ import alexander.fulleringer.vendingmachine.dao.VMDaoFileImpl;
 import alexander.fulleringer.vendingmachine.dto.Change;
 import alexander.fulleringer.vendingmachine.dto.Change.Coin;
 import alexander.fulleringer.vendingmachine.exceptions.AuditorFileAccessException;
+import alexander.fulleringer.vendingmachine.exceptions.DaoFileAccessException;
 import alexander.fulleringer.vendingmachine.exceptions.InsufficientFundsException;
 import alexander.fulleringer.vendingmachine.exceptions.NoInventoryException;
 import alexander.fulleringer.vendingmachine.service.VMService;
@@ -27,7 +28,12 @@ public class VendingMachineController {
     private VMView view;
     
     public VendingMachineController(){
-        service = new VMServiceImpl(new VMDaoFileImpl(), new VMDaoAuditorFileImpl());
+        try{
+            service = new VMServiceImpl(new VMDaoFileImpl(), new VMDaoAuditorFileImpl());  
+        }
+        catch(DaoFileAccessException e){
+            System.out.println("USE DEPENDENCY INJECTION!");
+        }
         UserIO io = new UserIOConsoleImpl();
         view = new VMView(io);
     }
@@ -42,7 +48,7 @@ public class VendingMachineController {
         int choice;
         while (loop){
             choice = view.printMenuGetSelection();
-            
+            //view.displayFunds(service.getFunds());
             switch (choice) {
                 case 1:
                     addFunds();
@@ -74,6 +80,7 @@ public class VendingMachineController {
         int choice;
         
         while (loop){
+            view.displayFunds(service.getFunds());
             choice = view.displayAddFundsMenuGetSelection();
             try{
                 switch (choice){
@@ -82,11 +89,11 @@ public class VendingMachineController {
                         service.addFunds(myCoin);
                         break;
                     case 2:
-                        myCoin = Coin.DIME;
+                        myCoin = Coin.NICKEL;
                         service.addFunds(myCoin);
                         break;
                     case 3:
-                        myCoin = Coin.NICKEL;
+                        myCoin = Coin.DIME;
                         service.addFunds(myCoin);
                         break;
                     case 4:
@@ -103,19 +110,23 @@ public class VendingMachineController {
             catch(AuditorFileAccessException e){
                 view.displayError(e);
             }
-            
-            
+     
         }
     }
     
     private void purchaseItem() {
         showItemInventory();
+        view.displayFunds(service.getFunds());
+        
         String itemId;
         itemId = view.getItemSelection(service.getInventory());
         try{
             service.purchaseItem(itemId);
+            view.printPurchaseSuccess(itemId, service.getFunds());
+            service.writeInventory();
+ 
         }
-            catch(InsufficientFundsException|NoInventoryException|AuditorFileAccessException e){
+        catch(InsufficientFundsException|NoInventoryException|AuditorFileAccessException|DaoFileAccessException e){
             view.printErrorMessage(e);
         }
     }

@@ -1,0 +1,3 @@
+Snickers::1.25::9
+Pringles::1.00::5
+Doritos::1.00::0

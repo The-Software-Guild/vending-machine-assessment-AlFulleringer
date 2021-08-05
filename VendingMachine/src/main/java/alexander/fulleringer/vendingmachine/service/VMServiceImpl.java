@@ -29,8 +29,13 @@ public class VMServiceImpl implements VMService {
     private VMDaoAuditor auditor;
     
     public VMServiceImpl(){
+        try{
         this.dao = new VMDaoFileImpl();
         this.auditor = new VMDaoAuditorFileImpl();
+        }
+        catch(DaoFileAccessException e){
+            System.out.println("This should not happen, use dependency injection!");
+        }
         
     }
     public List<Item> getInventory(){
@@ -45,7 +50,7 @@ public class VMServiceImpl implements VMService {
     }
     
     @Override
-    public void purchaseItem(String itemId) throws InsufficientFundsException, NoInventoryException, AuditorFileAccessException {
+    public void purchaseItem(String itemId) throws InsufficientFundsException, NoInventoryException, AuditorFileAccessException, DaoFileAccessException {
         Item toPurchase = dao.getItem(itemId);
         if(toPurchase.getStock()>0){
             if(toPurchase.getCost().compareTo(dao.getFunds()) != 1){ // 1 means cost is greater than price
@@ -54,12 +59,13 @@ public class VMServiceImpl implements VMService {
                 auditor.writeEntry("Purchased " + itemId + "Funds are now: " + this.getFunds());
             }
             else{
-                throw new InsufficientFundsException("You don't have the money to purchase that!");
+                throw new InsufficientFundsException("You don't have the money to purchase that, you only have " + this.getFunds());
             }
         }
         else{
             throw new NoInventoryException("There are no "+ itemId + " remaining.");
         }
+        
         
     }
     
@@ -72,17 +78,18 @@ public class VMServiceImpl implements VMService {
     
     @Override
     public void loadInventory() throws DaoFileAccessException {
-        dao.writeFile();    }
+        dao.readFile();    
+    }
     
     @Override
     public void writeInventory() throws DaoFileAccessException {
-        dao.readFile();
+        dao.writeFile();
     }
 
     @Override
     public String returnChange() throws AuditorFileAccessException{
         Change theChange = new Change(this.getFunds());
-        auditor.writeEntry("Change returned: " + theChange);
+        auditor.writeEntry("Change returned: " + theChange.getAuditEntry());
         dao.setFunds(new BigDecimal("0.00"));
         return theChange.getChange();
     }

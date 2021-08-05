@@ -27,7 +27,7 @@ public interface VMService {
      * @param itemId
      * @throws InsufficientFundsException
      */
-    void purchaseItem(String itemId) throws InsufficientFundsException, NoInventoryException, AuditorFileAccessException;
+    void purchaseItem(String itemId) throws InsufficientFundsException, NoInventoryException, AuditorFileAccessException, DaoFileAccessException;
     void addFunds(Coin myCoin) throws AuditorFileAccessException;
     void loadInventory() throws DaoFileAccessException;
     void writeInventory() throws DaoFileAccessException;

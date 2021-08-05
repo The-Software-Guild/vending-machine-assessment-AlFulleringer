@@ -27,8 +27,18 @@ import java.util.Scanner;
 public class VMDaoFileImpl implements VMDao {
     private BigDecimal funds = new BigDecimal("0.00");
     private Map<String,Item> inventory = new HashMap<>();
-    public static final String INVENTORY_FILE = "inventory.txt";
+    public static String INVENTORY_FILE = "inventory.txt";
     public static final String DELIMITER = "::";
+    
+    
+    public VMDaoFileImpl() throws DaoFileAccessException{
+        this.readFile();
+    }
+
+    public VMDaoFileImpl(String testtxt) throws DaoFileAccessException {
+        INVENTORY_FILE = testtxt;
+        this.readFile();
+    }
     
     @Override
     public Item addItem(String itemId, Item item) {

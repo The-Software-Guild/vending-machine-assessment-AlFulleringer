@@ -20,8 +20,14 @@ import java.time.LocalDateTime;
  * @author Alex
  */
 public class VMDaoAuditorFileImpl implements VMDaoAuditor{
-public static final String AUDIT_FILE = "audit.txt";
+public static String AUDIT_FILE = "audit.txt";
    
+    public VMDaoAuditorFileImpl(){
+        
+    }
+    public VMDaoAuditorFileImpl(String s){
+        AUDIT_FILE = s;
+    }
     public void writeEntry(String entry) throws AuditorFileAccessException {
         PrintWriter out;
        
