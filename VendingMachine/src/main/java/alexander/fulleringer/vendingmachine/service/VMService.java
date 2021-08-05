@@ -7,11 +7,13 @@ package alexander.fulleringer.vendingmachine.service;
 
 import alexander.fulleringer.vendingmachine.dto.Change;
 import alexander.fulleringer.vendingmachine.dto.Change.Coin;
+import alexander.fulleringer.vendingmachine.dto.Item;
 import alexander.fulleringer.vendingmachine.exceptions.AuditorFileAccessException;
 import alexander.fulleringer.vendingmachine.exceptions.DaoFileAccessException;
 import alexander.fulleringer.vendingmachine.exceptions.InsufficientFundsException;
 import alexander.fulleringer.vendingmachine.exceptions.NoInventoryException;
 import java.math.BigDecimal;
+import java.util.List;
 
 
 /**
@@ -31,5 +33,6 @@ public interface VMService {
     void writeInventory() throws DaoFileAccessException;
     BigDecimal getFunds();
     String returnChange() throws AuditorFileAccessException;
-    
+    List<Item> getInventory();
+
 }

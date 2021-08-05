@@ -61,7 +61,7 @@ public class VMView {
     }
 
 //
-    public void displayLibrary(List<Item> inventory){
+    public void displayInventory(List<Item> inventory){
         io.print("Here is what we have in our Vending Machine!");
         for(Item item : inventory){
             displayItem(item);
@@ -147,6 +147,18 @@ public class VMView {
     public void printChange(String changeDescription) {
         System.out.println("Here is your change!");
         System.out.println(changeDescription);
+    }
+
+    public String getItemSelection(List<Item> inventory) {
+        
+        String itemId;
+        int option=1;
+        for (Item item : inventory){
+            io.print("option " + option + " is: " + item.getName());
+            option++;
+        }
+        int choice = io.readInt("Which # would you like?", 1, inventory.size());
+        return inventory.get(choice-1).getName();
     }
     
     

@@ -10,6 +10,8 @@ import alexander.fulleringer.vendingmachine.dao.VMDaoFileImpl;
 import alexander.fulleringer.vendingmachine.dto.Change;
 import alexander.fulleringer.vendingmachine.dto.Change.Coin;
 import alexander.fulleringer.vendingmachine.exceptions.AuditorFileAccessException;
+import alexander.fulleringer.vendingmachine.exceptions.InsufficientFundsException;
+import alexander.fulleringer.vendingmachine.exceptions.NoInventoryException;
 import alexander.fulleringer.vendingmachine.service.VMService;
 import alexander.fulleringer.vendingmachine.service.VMServiceImpl;
 import alexander.fulleringer.vendingmachine.ui.UserIO;
@@ -55,7 +57,7 @@ public class VendingMachineController {
                     break;
                 case 4:
                     
-                    getItemInventory();
+                    showItemInventory();
                     break;
                 case 5:
                     loop = false;
@@ -107,7 +109,15 @@ public class VendingMachineController {
     }
     
     private void purchaseItem() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        showItemInventory();
+        String itemId;
+        itemId = view.getItemSelection(service.getInventory());
+        try{
+            service.purchaseItem(itemId);
+        }
+            catch(InsufficientFundsException|NoInventoryException|AuditorFileAccessException e){
+            view.printErrorMessage(e);
+        }
     }
     
     private void returnChange() {
@@ -121,8 +131,8 @@ public class VendingMachineController {
         }
     }
     
-    private void getItemInventory() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void showItemInventory() {
+        view.displayInventory(service.getInventory());
     }
     
     

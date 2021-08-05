@@ -17,6 +17,7 @@ import alexander.fulleringer.vendingmachine.exceptions.DaoFileAccessException;
 import alexander.fulleringer.vendingmachine.exceptions.InsufficientFundsException;
 import alexander.fulleringer.vendingmachine.exceptions.NoInventoryException;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -32,7 +33,9 @@ public class VMServiceImpl implements VMService {
         this.auditor = new VMDaoAuditorFileImpl();
         
     }
-    
+    public List<Item> getInventory(){
+        return dao.getAllItems();
+    }
     public BigDecimal getFunds(){
         return dao.getFunds();
     }
@@ -42,12 +45,13 @@ public class VMServiceImpl implements VMService {
     }
     
     @Override
-    public void purchaseItem(String itemId) throws InsufficientFundsException, NoInventoryException {
+    public void purchaseItem(String itemId) throws InsufficientFundsException, NoInventoryException, AuditorFileAccessException {
         Item toPurchase = dao.getItem(itemId);
         if(toPurchase.getStock()>0){
             if(toPurchase.getCost().compareTo(dao.getFunds()) != 1){ // 1 means cost is greater than price
                 dao.decrementItemCount(itemId);
                 dao.setFunds(dao.getFunds().subtract(toPurchase.getCost()));
+                auditor.writeEntry("Purchased " + itemId + "Funds are now: " + this.getFunds());
             }
             else{
                 throw new InsufficientFundsException("You don't have the money to purchase that!");
