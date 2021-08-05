@@ -24,5 +24,9 @@ public interface VMDao {
     
     void writeFile();
     void readFile();
+
+    public BigDecimal getFunds();
+
+    public void setFunds(BigDecimal add);
     
 }

@@ -9,6 +9,11 @@ package alexander.fulleringer.vendingmachine.exceptions;
  *
  * @author Alex
  */
-public class FileAccessException extends Exception{
-    
+public class AuditorFileAccessException extends Exception{
+    public AuditorFileAccessException(String message){
+        super(message);
+    }
+    public AuditorFileAccessException(String message, Throwable cause){
+        super(message,cause);
+    }
 }

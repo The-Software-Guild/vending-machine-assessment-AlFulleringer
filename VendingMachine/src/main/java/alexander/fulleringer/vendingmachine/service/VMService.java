@@ -5,7 +5,9 @@
  */
 package alexander.fulleringer.vendingmachine.service;
 
-import alexander.fulleringer.vendingmachine.exceptions.FileAccessException;
+import alexander.fulleringer.vendingmachine.dto.Change.Coin;
+import alexander.fulleringer.vendingmachine.exceptions.AuditorFileAccessException;
+import alexander.fulleringer.vendingmachine.exceptions.DaoFileAccessException;
 import alexander.fulleringer.vendingmachine.exceptions.InsufficientFundsException;
 import alexander.fulleringer.vendingmachine.exceptions.NoInventoryException;
 import java.math.BigDecimal;
@@ -15,17 +17,17 @@ import java.math.BigDecimal;
  *
  * @author Alex
  */
-public interface ServiceLayer {
+public interface VMService {
 
     /**
      *
      * @param itemId
      * @throws InsufficientFundsException
      */
-    void purchaseItem(String itemId) throws InsufficientFundsException, NoInventoryException;
-    void addFunds(BigDecimal fund);
-    void loadInventory() throws FileAccessException;
-    void writeInventory() throws FileAccessException;
+    void purchaseItem(String itemId) throws InsufficientFundsException, NoInventoryException, AuditorFileAccessException;
+    void addFunds(Coin myCoin) throws AuditorFileAccessException;
+    void loadInventory() throws DaoFileAccessException;
+    void writeInventory() throws DaoFileAccessException;
     
     
 }

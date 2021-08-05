@@ -18,10 +18,10 @@ public class Change {
         this.change = toReturn;
     }
     
-    public enum Coins{
-        PENNY("0.01"), NICKEL("0.05"), DIME("0.10"), QUARTER("0.25");
+    public enum Coin{
+        NO_COIN("0.00"), PENNY("0.01"), NICKEL("0.05"), DIME("0.10"), QUARTER("0.25");
         public BigDecimal value;
-        private Coins(String s){
+        private Coin(String s){
             this.value = new BigDecimal(s);
         }
         public BigDecimal getValue(){

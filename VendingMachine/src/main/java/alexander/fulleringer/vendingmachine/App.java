@@ -5,7 +5,9 @@
  */
 package alexander.fulleringer.vendingmachine;
 
-import alexander.fulleringer.vendingmachine.dto.Change.Coins;
+import alexander.fulleringer.vendingmachine.controller.VendingMachineController;
+
+
 
 /**
  *
@@ -14,7 +16,9 @@ import alexander.fulleringer.vendingmachine.dto.Change.Coins;
 public class App {
     public static void main(String[] args){
         
-
+        VendingMachineController controller = new VendingMachineController();
+        
+        controller.run();
         
     }
 }
