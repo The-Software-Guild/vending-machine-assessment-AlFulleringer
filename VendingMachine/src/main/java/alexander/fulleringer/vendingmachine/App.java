@@ -17,6 +17,8 @@ import alexander.fulleringer.vendingmachine.service.VMServiceImpl;
 import alexander.fulleringer.vendingmachine.ui.UserIO;
 import alexander.fulleringer.vendingmachine.ui.UserIOConsoleImpl;
 import alexander.fulleringer.vendingmachine.ui.VMView;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 
@@ -26,25 +28,29 @@ import alexander.fulleringer.vendingmachine.ui.VMView;
  */
 public class App {
     public static void main(String[] args){
-        VMDao dao;
-        VMDaoAuditor auditor;
-        VMService service; 
-        UserIO io = new UserIOConsoleImpl();
-        VMView view = new VMView(io);
-        
-        try{
-            dao = new VMDaoFileImpl();
-            auditor = new VMDaoAuditorFileImpl();
-            service = new VMServiceImpl(dao,auditor);
-            VendingMachineController controller = new VendingMachineController(service, view);
-            controller.run();
-        }
-        catch(DaoFileAccessException e){
-            view.printErrorMessage(e);
-            System.exit(0);
-        }
-        
-        
+//        VMDao dao;
+//        VMDaoAuditor auditor;
+//        VMService service; 
+//        UserIO io = new UserIOConsoleImpl();
+//        VMView view = new VMView(io);
+//        
+//        try{
+//            dao = new VMDaoFileImpl();
+//            auditor = new VMDaoAuditorFileImpl();
+//            service = new VMServiceImpl(dao,auditor);
+//            VendingMachineController controller = new VendingMachineController(service, view);
+//            controller.run();
+//        }
+//        catch(DaoFileAccessException e){
+//            view.printErrorMessage(e);
+//            System.exit(0);
+//        }
+//        
+        ApplicationContext ctx = 
+           new ClassPathXmlApplicationContext("applicationContext.xml");
+        VendingMachineController controller = 
+           ctx.getBean("controller", VendingMachineController.class);
+        controller.run();
         
         
     }
